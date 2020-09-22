@@ -2,7 +2,7 @@
 import groovy.json.JsonSlurperClassic
 node {
 	
-	try{	
+
 
     def BUILD_NUMBER=env.BUILD_NUMBER
     def RUN_ARTIFACT_DIR="tests/${BUILD_NUMBER}"
@@ -19,7 +19,7 @@ node {
     println SFDC_HOST
     println CONNECTED_APP_CONSUMER_KEY
     def toolbelt = tool 'toolbelt'
-
+try{	
     stage('checkout source') {
         // when running in multi-branch job, one must issue this command
         checkout scm
@@ -50,7 +50,7 @@ node {
             //println(rmsg)
         }
     }
-	} catch (e){
+} catch (e){
 			    echo 'This will run only if failed'
 
         // Since we're catching the exception in order to report on it,
