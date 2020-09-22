@@ -34,9 +34,9 @@ try{
 		
 			// need to pull out assigned username
 			if (isUnix()) {
-				rmsg = sh returnStdout: true, script: "${toolbelt} force:mdapi:deploy -d manifest/. -u ${HUB_ORG}"
+				rmsg = sh returnStdout: true, script: "${toolbelt} force:mdapi:deploy -d manifest/. -u ${HUB_ORG} -w10"
 			}else{
-			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:mdapi:deploy -d manifest/. -u ${HUB_ORG}"
+			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:mdapi:deploy -d manifest/. -u ${HUB_ORG} -w10"
 			}
 	    println 'Resultado deploy'		
 			  
@@ -48,7 +48,7 @@ try{
 } catch (e){
         throw e
 }finally {
-        cleanWs()
+        //cleanWs()
 	rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:logout -u ${HUB_ORG} -p" 
 	if (rc != 0) { error 'Error logout' }
     }
