@@ -38,14 +38,14 @@ try{
 		        println JWT_KEY_CRED_ID
 			
 			// need to pull out assigned username
-			/*if (isUnix()) {
+			if (isUnix()) {
 				rmsg = sh returnStdout: true, script: "${toolbelt} force:mdapi:deploy -d manifest/. -u ${HUB_ORG}"
 			}else{
 			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:mdapi:deploy -d manifest/. -u ${HUB_ORG}"
 			}
 	    println 'Resultado deploy'		
 			  
-            printf rmsg*/
+            printf rmsg
             println('Hello from a Job DSL script!')
             //println(rmsg)
         }
