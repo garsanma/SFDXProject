@@ -49,8 +49,11 @@ try{
         throw e
 }finally {
         //cleanWs()
-	rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:logout -u ${HUB_ORG} -p" 
-	if (rc != 0) { error 'Error logout' }
+	stage ('Logout'){
+		if (isUnix()) {rc = sh returnStatus: true, script: "\"${toolbelt}\" force:auth:logout -u ${HUB_ORG} -p" }
+		else {rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:logout -u ${HUB_ORG} -p" }
+		if (rc != 0) { error 'Error logout' }
+	}
     }
 }
 
