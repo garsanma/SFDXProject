@@ -1,6 +1,8 @@
 #!groovy
 import groovy.json.JsonSlurperClassic
 node {
+	
+	try{	
 
     def BUILD_NUMBER=env.BUILD_NUMBER
     def RUN_ARTIFACT_DIR="tests/${BUILD_NUMBER}"
@@ -48,14 +50,19 @@ node {
             //println(rmsg)
         }
     }
-	
-post {
+	} catch (e){
+			    echo 'This will run only if failed'
 
-    cleanup {
+        // Since we're catching the exception in order to report on it,
+        // we need to re-throw it, to ensure that the build is marked as failed
+        throw e
+}finally {
+
+    /*cleanup {
 	    println 'cleanWs' 
         cleanWs()
     }
-    always {
+    always {*/
 	    println 'ini logout'
         bat "sfdx force:auth:logout -u ${HUB_ORG} -p" 
 	       println 'fin logout'
