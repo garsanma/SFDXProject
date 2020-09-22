@@ -64,8 +64,9 @@ try{
     }
     always {*/
 	    println 'ini logout'
-        bat "sfdx force:auth:logout -u ${HUB_ORG} -p" 
-	       println 'fin logout'
+	rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:logout -u ${HUB_ORG} -p" 
+	if (rc != 0) { error 'error logout' }
+	else{     println 'fin logout ok'}
     }
 }
 
