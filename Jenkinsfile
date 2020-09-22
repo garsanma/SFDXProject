@@ -33,6 +33,7 @@ node {
             if (rc != 0) { error 'hub org authorization failed' }
 
 			println rc
+		        println JWT_KEY_CRED_ID
 			
 			// need to pull out assigned username
 			if (isUnix()) {
@@ -40,6 +41,7 @@ node {
 			}else{
 			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:mdapi:deploy -d manifest/. -u ${HUB_ORG}"
 			}
+	    println 'Resultado deploy'		
 			  
             printf rmsg
             println('Hello from a Job DSL script!')
