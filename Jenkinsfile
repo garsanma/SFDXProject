@@ -68,4 +68,4 @@ node {
 	       println 'fin logout'
     }
 }
-}
+
