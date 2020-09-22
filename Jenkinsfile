@@ -2,8 +2,6 @@
 import groovy.json.JsonSlurperClassic
 node {
 	
-
-
     def BUILD_NUMBER=env.BUILD_NUMBER
     def RUN_ARTIFACT_DIR="tests/${BUILD_NUMBER}"
     def SFDC_USERNAME
@@ -33,10 +31,7 @@ try{
                  rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
             }
             if (rc != 0) { error 'hub org authorization failed' }
-
-			println rc
-		        println JWT_KEY_CRED_ID
-			
+		
 			// need to pull out assigned username
 			if (isUnix()) {
 				rmsg = sh returnStdout: true, script: "${toolbelt} force:mdapi:deploy -d manifest/. -u ${HUB_ORG}"
@@ -51,22 +46,11 @@ try{
         }
     }
 } catch (e){
-			    echo 'This will run only if failed'
-
-        // Since we're catching the exception in order to report on it,
-        // we need to re-throw it, to ensure that the build is marked as failed
         throw e
 }finally {
-
-    /*cleanup {
-	    println 'cleanWs' 
         cleanWs()
-    }
-    always {*/
-	    println 'ini logout'
 	rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:logout -u ${HUB_ORG} -p" 
-	if (rc != 0) { error 'error logout' }
-	else{     println 'fin logout ok'}
+	if (rc != 0) { error 'Error logout' }
     }
 }
 
