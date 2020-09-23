@@ -19,11 +19,12 @@ node {
     def toolbelt = tool 'toolbelt'
 	
     def command(script) {
-    if (isUnix()) {
-        return sh(returnStatus: true, script: script);
-    } else {
-        return bat(returnStatus: true, script: script);
-    }	
+	    if (isUnix()) {
+		return sh(returnStatus: true, script: script);
+	    } else {
+		return bat(returnStatus: true, script: script);
+	    }	
+    }
 	    
 try{	
 
