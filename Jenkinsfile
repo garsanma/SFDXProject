@@ -17,13 +17,9 @@ node {
     println SFDC_HOST
     println CONNECTED_APP_CONSUMER_KEY
     def toolbelt = tool 'toolbelt'
-	
-   
 	    
 try{	
-	
-
-	
+		
     stage('Checkout source') {
         // when running in multi-branch job, one must issue this command
         checkout scm
@@ -35,8 +31,7 @@ try{
         // -------------------------------------------------------------------------
         stage('Authorize') {
             if (isUnix()) {
-		 //   rc = command "\"${toolbelt}\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
-               rc = sh returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
+		rc = sh returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
             }else{
                 rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
             }
@@ -45,24 +40,24 @@ try{
 	// -------------------------------------------------------------------------
         // Create new scratch org to test your code.
         // -------------------------------------------------------------------------
-        stage('Create Test Scratch Org') {
+       /* stage('Create Test Scratch Org') {
                 rc = bat returnStatus: true, script: "\"${toolbelt}\" force:org:create   --definitionfile config/project-scratch-def.json --wait 10 --durationdays 1"
                 if (rc != 0) {
                     error 'Salesforce test scratch org creation failed.'
                 }
-        }    
-	stage('Deploye Code') {
+        }   */ 
+	stage('Source Deploy') {
 			// need to pull out assigned username
-			if (isUnix()) {
-				rmsg = sh returnStdout: true, script: "${toolbelt} force:mdapi:deploy -d manifest/. -u ${HUB_ORG} -w10"
+			if (isUnix()) {				
+				rc = sh returnStdout: true, script: "${toolbelt} force:source:deploy -x ./manifest/package.xml -u ${HUB_ORG} -w10"
+				//rc = sh returnStdout: true, script: "${toolbelt} force:mdapi:deploy -d manifest/. -u ${HUB_ORG} -w10"
 			}else{
-			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:mdapi:deploy -d manifest/. -u ${HUB_ORG} -w10"
+			   	//rc = bat returnStdout: true, script: "\"${toolbelt}\" force:mdapi:deploy -d manifest/. -u ${HUB_ORG} -w10"
+				rc = sh returnStdout: true, script: "${toolbelt} force:source:deploy -x ./manifest/package.xml -u ${HUB_ORG} -w10"
 			}
-	    println 'Resultado deploy'		
+	    if (rc != 0) { error 'Error Deploy' }		
 			  
-            println rmsg
-            println('Hello from a Job DSL script!')
-            //println(rmsg)
+     
         }
     }
 } catch (e){
@@ -76,11 +71,5 @@ try{
 	}
     }
 }
-def command(script) {
-	if (isUnix()) {
-	return sh(returnStatus: true, script: script);
-	} else {
-	return bat(returnStatus: true, script: script);
-	}	
-}
+
 
