@@ -17,7 +17,17 @@ node {
     println SFDC_HOST
     println CONNECTED_APP_CONSUMER_KEY
     def toolbelt = tool 'toolbelt'
+	
+    def command(script) {
+    if (isUnix()) {
+        return sh(returnStatus: true, script: script);
+    } else {
+        return bat(returnStatus: true, script: script);
+    }	
+	    
 try{	
+
+	
     stage('Checkout source') {
         // when running in multi-branch job, one must issue this command
         checkout scm
@@ -28,10 +38,11 @@ try{
         // Authorize the Dev Hub org with JWT key 
         // -------------------------------------------------------------------------
         stage('Authorize') {
-            if (isUnix()) {
-                rc = sh returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
-            }else{
-                 rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
+            //if (isUnix()) {
+		    rc = command "${toolbelt} force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
+            //    rc = sh returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
+           // }else{
+             //    rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
             }
             if (rc != 0) { error 'hub org authorization failed' }
 	}	
