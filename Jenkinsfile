@@ -53,7 +53,11 @@ try{
 				//rc = sh returnStdout: true, script: "${toolbelt} force:mdapi:deploy -d manifest/. -u ${HUB_ORG} -w10"
 			}else{
 			   	//rc = bat returnStdout: true, script: "\"${toolbelt}\" force:mdapi:deploy -d manifest/. -u ${HUB_ORG} -w10"
-				rc = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy -x ./manifest/package.xml -u ${HUB_ORG} -w10"
+				//rc = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy -x ./manifest/package.xml -u ${HUB_ORG} -w10"
+				println 'DEPLOY WINDOWS'
+				rc = bat returnStatus: true, script: "\"${toolbelt}\" force:source:deploy  --manifest ./manifest/package.xml --targetusername ${HUB_ORG}"
+				
+
 			}
 	    printf rc
             println('Hello from a Job DSL script!')
@@ -74,5 +78,6 @@ try{
 	}
     }
 }
+
 
 
