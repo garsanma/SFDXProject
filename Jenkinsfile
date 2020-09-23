@@ -49,19 +49,13 @@ try{
 	stage('Source Deploy') {
 			// need to pull out assigned username
 			if (isUnix()) {				
-				rc = sh returnStdout: true, script: "${toolbelt} force:source:deploy -x ./manifest/package.xml -u ${HUB_ORG} -w10"
+				rc = sh returnStdout: true, script: "${toolbelt} force:source:deploy -x ./manifest/package.xml -u ${HUB_ORG}"
 				//rc = sh returnStdout: true, script: "${toolbelt} force:mdapi:deploy -d manifest/. -u ${HUB_ORG} -w10"
 			}else{
 			   	//rc = bat returnStdout: true, script: "\"${toolbelt}\" force:mdapi:deploy -d manifest/. -u ${HUB_ORG} -w10"
-				//rc = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy -x ./manifest/package.xml -u ${HUB_ORG} -w10"
-				println 'DEPLOY WINDOWS'
-				rc = bat returnStatus: true, script: "\"${toolbelt}\" force:source:deploy  --manifest ./manifest/package.xml --targetusername ${HUB_ORG}"
-				
-
+				rc = bat returnStatus: true, script: "\"${toolbelt}\" force:source:deploy  -x ./manifest/package.xml -u ${HUB_ORG}"
 			}
-	    if (rc != 0) { error 'Error Deploy' }		
-			  
-     
+	    if (rc != 0) { error 'Error Deploy' }	
         }
     }
 } catch (e){
