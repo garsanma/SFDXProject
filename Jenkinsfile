@@ -18,16 +18,17 @@ node {
     println CONNECTED_APP_CONSUMER_KEY
     def toolbelt = tool 'toolbelt'
 	
-    def command(script) {
+   
+	    
+try{	
+	
+   def command(script) {
 	    if (isUnix()) {
 		return sh(returnStatus: true, script: script);
 	    } else {
 		return bat(returnStatus: true, script: script);
 	    }	
     }
-	    
-try{	
-
 	
     stage('Checkout source') {
         // when running in multi-branch job, one must issue this command
