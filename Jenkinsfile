@@ -35,10 +35,9 @@ try{
             }
             if (rc != 0) { error 'hub org authorization failed' }
 	}	
-	/ -------------------------------------------------------------------------
-            // Create new scratch org to test your code.
-            // -------------------------------------------------------------------------
- 
+	// -------------------------------------------------------------------------
+        // Create new scratch org to test your code.
+        // -------------------------------------------------------------------------
         stage('Create Test Scratch Org') {
                 rc = bat returnStatus: true, script: "\"${toolbelt}\" force:org:create   --definitionfile config/project-scratch-def.json --wait 10 --durationdays 1"
                 if (rc != 0) {
