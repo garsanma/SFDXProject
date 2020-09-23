@@ -22,13 +22,7 @@ node {
 	    
 try{	
 	
-   def command(script) {
-	    if (isUnix()) {
-		return sh(returnStatus: true, script: script);
-	    } else {
-		return bat(returnStatus: true, script: script);
-	    }	
-    }
+
 	
     stage('Checkout source') {
         // when running in multi-branch job, one must issue this command
@@ -80,6 +74,13 @@ try{
 		else {rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:logout -u ${HUB_ORG} -p" }
 		if (rc != 0) { error 'Error logout' }
 	}
+    }
+	   def command(script) {
+	    if (isUnix()) {
+		return sh(returnStatus: true, script: script);
+	    } else {
+		return bat(returnStatus: true, script: script);
+	    }	
     }
 }
 
