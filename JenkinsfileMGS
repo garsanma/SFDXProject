@@ -44,7 +44,7 @@ try{
 }finally {
         //cleanWs()
 	stage ('Logout'){
-		rc = command "\"${toolbelt}\" force:auth:logout -u ${HUB_ORG} -p" }
+		rc = command "\"${toolbelt}\" force:auth:logout -u ${HUB_ORG} -p" 
 		if (rc != 0) { error 'Error logout' }
 	}
     }
