@@ -18,12 +18,15 @@ node {
     println CONNECTED_APP_CONSUMER_KEY
     def toolbelt = tool 'toolbelt'
 try{	
-    stage('checkout source') {
+    stage('Checkout source') {
         // when running in multi-branch job, one must issue this command
         checkout scm
     }
 
     withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
+	// -------------------------------------------------------------------------
+        // Authorize the Dev Hub org with JWT key 
+        // -------------------------------------------------------------------------
         stage('Authorize') {
             if (isUnix()) {
                 rc = sh returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
@@ -32,6 +35,16 @@ try{
             }
             if (rc != 0) { error 'hub org authorization failed' }
 	}	
+	/ -------------------------------------------------------------------------
+            // Create new scratch org to test your code.
+            // -------------------------------------------------------------------------
+ 
+        stage('Create Test Scratch Org') {
+                rc = bat returnStatus: true, script: "\"${toolbelt}\" force:org:create   --definitionfile config/project-scratch-def.json --wait 10 --durationdays 1"
+                if (rc != 0) {
+                    error 'Salesforce test scratch org creation failed.'
+                }
+        }    
 	stage('Deploye Code') {
 			// need to pull out assigned username
 			if (isUnix()) {
