@@ -55,7 +55,9 @@ try{
 			   	//rc = bat returnStdout: true, script: "\"${toolbelt}\" force:mdapi:deploy -d manifest/. -u ${HUB_ORG} -w10"
 				rc = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy -x ./manifest/package.xml -u ${HUB_ORG} -w10"
 			}
-	    println(rmsg)	
+	    printf rc
+            println('Hello from a Job DSL script!')
+            println(rc)	
 	    if (rc != 0) { error 'Error Deploy' }		
 			  
      
