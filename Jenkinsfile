@@ -59,9 +59,6 @@ try{
 				
 
 			}
-	    printf rc
-            println('Hello from a Job DSL script!')
-            println(rc)	
 	    if (rc != 0) { error 'Error Deploy' }		
 			  
      
