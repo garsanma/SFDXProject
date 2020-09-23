@@ -37,23 +37,18 @@ try{
             }
             if (rc != 0) { error 'hub org authorization failed' }
 	}	
-	// -------------------------------------------------------------------------
-        // Create new scratch org to test your code.
-        // -------------------------------------------------------------------------
-       /* stage('Create Test Scratch Org') {
-                rc = bat returnStatus: true, script: "\"${toolbelt}\" force:org:create   --definitionfile config/project-scratch-def.json --wait 10 --durationdays 1"
-                if (rc != 0) {
-                    error 'Salesforce test scratch org creation failed.'
-                }
-        }   */ 
+
 	stage('Source Deploy') {
+		
+		
+		   
 			// need to pull out assigned username
 			if (isUnix()) {				
 				rc = sh returnStdout: true, script: "${toolbelt} force:source:deploy -x ./manifest/package.xml -u ${HUB_ORG}"
-				//rc = sh returnStdout: true, script: "${toolbelt} force:mdapi:deploy -d manifest/. -u ${HUB_ORG} -w10"
 			}else{
-			   	//rc = bat returnStdout: true, script: "\"${toolbelt}\" force:mdapi:deploy -d manifest/. -u ${HUB_ORG} -w10"
-				rc = bat returnStatus: true, script: "\"${toolbelt}\" force:source:deploy  -x ./manifest/package.xml -u ${HUB_ORG}"
+				//rc = bat returnStatus: true, script: "\"${toolbelt}\" force:source:deploy  -x ./manifest/package.xml -u ${HUB_ORG}"
+				//rc = bat returnStatus: true, script: "\"${toolbelt}\" force:source:deploy  -x ./manifest/package.xml -u ${HUB_ORG}"
+				rc = command "\"${toolbelt}\" force:source:deploy  -x ./manifest/package.xml -u ${HUB_ORG}"
 			}
 	    if (rc != 0) { error 'Error Deploy' }	
         }
@@ -70,5 +65,12 @@ try{
     }
 }
 
+def command(script) {
+    if (isUnix()) {
+        return sh(returnStatus: true, script: script);
+    } else {
+        return bat(returnStatus: true, script: script);
+    }
+}
 
 
